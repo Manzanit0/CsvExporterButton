@@ -1,0 +1,10 @@
+<!--
+  - Created by Manzanit0 on 20/08/2018.
+ -->
+
+<aura:component description="CsvExporterButton">
+    <aura:attribute name="records" type="Object[]"/>
+    <aura:attribute name="fileName" type="String"/>
+
+    <lightning:buttonIcon iconName="utility:download" onclick="{! c.downloadCsv }" alternativeText="Export to CSV" />
+</aura:component>
