@@ -5,25 +5,30 @@
 ({
     convertArrayOfObjectsToCSV : function(component, objectRecords){
         if (objectRecords == null || !objectRecords.length) {
-            return null;
+            return null; // TODO: give feedback to the user instead of returning null.
         }
 
-        var csvStringResult, counter, keys, columnDivider, lineDivider;
-
         // CSV file parameters.
-        columnDivider = ',';
-        lineDivider =  '\n';
+        var columnDivider = ',';
+        var lineDivider =  '\n';
 
         // Get the CSV header from the object keys.
-        keys = Object.keys(objectRecords[0]); // FIXME: If the first record has empty fields, then they won't appear in header.
-        console.log(keys);
+        var keys = new Set();
+        objectRecords.forEach(function (record) {
+            Object.keys(record).forEach(function (key) {
+                keys.add(key);
+            });
+        });
 
-        csvStringResult = '';
+        // The Set class doesn't have a "join" method.
+        keys = Array.from(keys);
+
+        var csvStringResult = '';
         csvStringResult += keys.join(columnDivider);
         csvStringResult += lineDivider;
 
         for(var i=0; i < objectRecords.length; i++){
-            counter = 0;
+            var counter = 0;
 
             for(var sTempkey in keys) {
                 var skey = keys[sTempkey] ;
@@ -33,7 +38,9 @@
                     csvStringResult += columnDivider;
                 }
 
-                csvStringResult += '"'+ objectRecords[i][skey]+'"';
+                // If the column is indefined, leave it as blank in the CSV file.
+                var value = objectRecords[i][skey] === undefined ? '' : objectRecords[i][skey];
+                csvStringResult += '"'+ value +'"';
 
                 counter++;
 
